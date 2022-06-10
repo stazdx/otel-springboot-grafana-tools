@@ -19,7 +19,7 @@ Clone the repo:
 
 ```
 $ git clone https://stazdx@github.com/stazdx/otel-springboot-grafana-tools.git
-$ otel-springboot-grafana-tools
+$ cd otel-springboot-grafana-tools
 ```
 
 Running demo:

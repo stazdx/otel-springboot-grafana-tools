@@ -10,7 +10,7 @@ helm repo update
 
 kubectl create ns observability
 
-cd promtail
+cd kubernetes/promtail
 helm upgrade --install promtail grafana/promtail -n observability -f promtail.yaml
 
 helm upgrade --install loki grafana/loki-distributed -n observability
@@ -30,4 +30,4 @@ cd ../springboot-app
 kubectl apply -f springboot-app.yaml
 
 kubectl get svc -l app=springboot-app
-kubectl get svc -n observability 
+kubectl get svc -n observability kube-prometheus-stack-grafana

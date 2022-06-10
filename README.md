@@ -1,5 +1,10 @@
 ## Open Telemetry - Spring Boot - Prometheus - Exemplar - Loki - Tempo - Grafana
 
+In my blog you can find a complete tutorial -> 
+https://k8staz.com/setting-up-open-source-observability-stack-on-kubernetes-from-scratch
+
+### Demo
+
 Download Multipass [here](https://multipass.run/)
 
 Create Ubuntu instance on local environment:

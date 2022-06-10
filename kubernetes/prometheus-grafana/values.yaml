@@ -1,0 +1,92 @@
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      # Enable Exemplar Storage - Prometheus 
+      enableFeatures:
+        - exemplar-storage
+      additionalScrapeConfigs:
+        - job_name: 'kubernetes-service-endpoints'
+          scrape_interval: 5s
+          scrape_timeout: 2s
+          kubernetes_sd_configs:
+            - role: endpoints
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+              action: keep
+              regex: true
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+              action: replace
+              target_label: __scheme__
+              regex: (https?)
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+              action: replace
+              target_label: __metrics_path__
+              regex: (.+)
+            - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+              action: replace
+              target_label: __address__
+              regex: (.+)(?::\d+);(\d+)
+              replacement: $1:$2
+            - action: labelmap
+              regex: __meta_kubernetes_service_label_(.+)
+            - source_labels: [__meta_kubernetes_namespace]
+              action: replace
+              target_label: kubernetes_namespace
+            - source_labels: [__meta_kubernetes_service_name]
+              action: replace
+              target_label: kubernetes_name
+  grafana:
+    service:
+      type: LoadBalancer
+    # Anonymous login without credentials -- ONLY NON PRODUCTION ENVIRONMENTS!
+    grafana.ini:
+      auth:
+        disable_login_form: true
+      auth.anonymous:
+        enabled: true
+        org_name: "Main Org."
+        org_role: Admin
+    sidecar:
+      dashboards:
+        searchNamespace: ALL
+    # Import Prometheus, Loki and Tempo Datasources
+    additionalDataSources:
+      - name: Prometheus
+        type: prometheus
+        uid: prometheus
+        access: proxy
+        url: http://kube-prometheus-stack-prometheus:9090
+        jsonData:
+          exemplarTraceIdDestinations:
+            # Prometheus Exemplar Metrics relationated with Tempo trace_id variable.
+            - name: trace_id
+              datasourceUid: tempo
+              urlDisplayLabel: View in Tempo
+      - name: Loki
+        type: loki
+        uid: loki
+        access: proxy
+        url: http://loki-loki-distributed-gateway
+        jsonData:
+          derivedFields:
+            # Opentelemetry set trace_id in log and Loki search this metric for relating with Tempo traces.
+            - name: trace_id
+              datasourceUid: tempo
+              matcherRegex: "trace_id=(\\w+)"
+              url: '$${__value.raw}'
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        access: proxy
+        url: http://tempo-tempo-distributed-query-frontend:3100
+        jsonData:
+          httpMethod: GET
+          # Tempo redirects to Loki logs by specific trace_id
+          tracesToLogs:
+            datasourceUid: 'loki'
+            tags: [ 'app' ]
+            spanStartTimeShift: 1s
+            spandEndTimeShift: 1s
+            lokiSearch: true
+          serviceMap:
+            datasourceUid: 'prometheus'

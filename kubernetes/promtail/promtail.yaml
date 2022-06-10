@@ -1,0 +1,8 @@
+# https://github.com/grafana/helm-charts/blob/main/charts/promtail/values.yaml
+config:
+  snippets:
+    pipelineStages:
+      # not cri, because we're running in k3s with docker runtime
+      - docker: {}
+  # Loki service url
+  lokiAddress: http://loki-loki-distributed-gateway/loki/api/v1/push

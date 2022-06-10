@@ -5,4 +5,5 @@ config:
       # not cri, because we're running in k3s with docker runtime
       - docker: {}
   # Loki service url
-  lokiAddress: http://loki-loki-distributed-gateway/loki/api/v1/push
+  clients:
+    - url: http://loki-loki-distributed-gateway/loki/api/v1/push

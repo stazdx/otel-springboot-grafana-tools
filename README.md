@@ -1,6 +1,4 @@
-# Open Telemetry - Spring Boot - Prometheus - Exemplar - Loki - Tempo - Grafana
-
-## Deploy using Multipass
+## Open Telemetry - Spring Boot - Prometheus - Exemplar - Loki - Tempo - Grafana
 
 Download Multipass [here](https://multipass.run/)
 

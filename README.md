@@ -21,7 +21,7 @@ $ sudo su
 Clone the repo: 
 
 ```
-$ git clone https://stazdx@github.com/stazdx/otel-springboot-grafana-tools.git
+$ git clone https://github.com/stazdx/otel-springboot-grafana-tools.git
 $ cd otel-springboot-grafana-tools
 ```
 

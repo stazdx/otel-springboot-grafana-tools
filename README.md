@@ -1,6 +1,6 @@
 ## Open Telemetry - Spring Boot - Prometheus - Exemplar - Loki - Tempo - Grafana
 
-In my blog you can find a complete tutorial -> 
+You can find a complete tutorial in my blog -> 
 https://k8staz.com/setting-up-open-source-observability-stack-on-kubernetes-from-scratch
 
 ### Demo
